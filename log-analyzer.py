@@ -7,8 +7,7 @@
                                 ##################################################
 
 import os
-import sys
-import time
+import subprocess
 
 
 
@@ -29,40 +28,44 @@ def main():
 		users = line.split()[8]   # Include the executing user.
 		
 		usedcommand = line.split()[11]  # Include the command.
+		
+	#	print(f"{timeStamp}  {users}  {usedcommand}")
 	
-		print(f"{timeStamp}  {users}  {usedcommand}")
 	
 	
 	# 2. Monitor user authentication changes.
 	# cat /var/log/auth.log | egrep -a 'su: | sudo:' | grep -i 'command' | awk '{print $1 " " $2 " " $3 "\t" $12 "\t" $14}'
-	Monitor = []
-	print()
-	with open('/var/log/auth.log') as log2:
-		print("User Authentication Changes: ")
 	
-	# 2.1. Print details of newly added users, including the Timestamp.
-		if "useradd" in line:
-			Monitor.append(line.strip())
+	# Print details of newly added users, including the Timestamp.
+	# cat /var/log/auth.log | grep -a 'adduser'
+	newusers=[]
 	
-	# 2.2. Print details of deleted users, including the Timestamp.
-		elif "userdel" in line:
-			Monitor.append(line.strip())
+	# Print details of deleted users, including the Timestamp.
+	# cat /var/log/auth.log | grep -a 'deluser'
+	delusers =[]
 	
-	# 2.3. Print details of changing passwords, including the Timestamp.
-		elif "passwd" in line:
-			Monitor.append(line.strip())
+	# Print details of changing passwords, including the Timestamp.
+	# cat /var/log/auth.log | grep -a 'passwd' | grep -a 'sudo'
+	passch = []
 	
-	# 2.4. Print details of when users used the su command.
-		print()
+	# Print details of users who used the sudo; include the command.
+	indata = subprocess.check_output("cat /var/log/auth.log | grep -a 'sudo:' | grep -i command ", shell=True).decode("utf-8").split('\n')
+	for info in indata:
+		print(info.split(';')[-2:])
 	
-	# 2.5. Print details of users who used the sudo; include the command.
-		elif "COMMAND"
 	
-	# 2.6. Print ALERT! If users failed to use the sudo command; include the command.
-		print()
-		print(Monitor)
+	# Print ALERT! If users failed to use the sudo command; include the command.
+	# cat /var/log/auth.log | grep -a 'sudo' | grep 'failure'
+
+
 	
-	print()
+	
+	# Print details of when users used the su command.
+	usedsu = subprocess.check_output("cat /var/log/auth.log | grep -a 'su:'", shell=True).decode("utf-8").split('\n')
+	for period in usedsu:
+		if period != "":
+			#print(f"The user used su command on: {period[:16]}")
+			print()
 
 main()
 
