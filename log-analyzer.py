@@ -11,8 +11,9 @@ import subprocess
 import sys
 
 
+mplatform = sys.platform
 
-if sys.platform == 'linux' :
+if mplatform == 'linux' :
 	
 	commands = []
 	passch = []
@@ -163,4 +164,5 @@ if sys.platform == 'linux' :
 		
 	
 	main()
-
+elif mplatform == 'windows':
+	print("check if is windows system")
