@@ -164,5 +164,5 @@ if mplatform == 'linux' :
 		
 	
 	main()
-elif mplatform == 'windows':
-	print("check if is windows system")
+elif mplatform == 'win32':
+	print("Script works on Linux systems only!")
