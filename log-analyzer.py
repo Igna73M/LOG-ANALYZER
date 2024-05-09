@@ -1,12 +1,12 @@
-                            ########################################
-                            ##									  ##
-                            ##		Log Analyzer Project:		  ##
-                            ##		Written by:					  ##
-                            ##		           Mugabe Ignace	  ##
-                            ##      GitHub:                       ##
-                            ##              Mugabe000             ##
-                            ##									  ##
-                            ########################################
+                            #########################################
+                            ##					   ##
+                            ##		Log Analyzer Project:	   ##
+                            ##		Written by:		   ##
+                            ##		           Mugabe Ignace   ##
+                            ##      GitHub:                        ##
+                            ##              Mugabe000              ##
+                            ##					   ##
+                            #########################################
 
 import os
 import sys
