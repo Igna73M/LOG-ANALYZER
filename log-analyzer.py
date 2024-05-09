@@ -7,7 +7,6 @@
                                 ##################################################
 
 import os
-import subprocess
 import sys
 
 
@@ -84,35 +83,56 @@ if mplatform == 'linux' :
 	def sudouse():
 		print()
 		
-		indata = subprocess.check_output("cat /var/log/auth.log | grep -a 'sudo:' | grep -i command ", shell=True).decode("utf-8").split('\n')
-		print("=> When The user used sudo privilage: ")
+		# Open the auth.log file and read its content
+		with open('/var/log/auth.log', 'r') as auth_log:
+			log_lines = auth_log.readlines()
+		
+		# Filter lines containing 'sudo' and 'COMMAND' (case-insensitive)
+		sudo_command_lines = [line for line in log_lines if 'sudo:' in line and 'COMMAND' in line.upper()]
+		
+		print("=> When The user used sudo privilege: ")
 		print()
-		for info in indata:
-			linecheck = info.split(';')[-2:]
-			print(f"{linecheck[0]}	{linecheck[-1]}")
+		for line in sudo_command_lines:
+			line_parts = line.split(';')
+			print(f"{line_parts[-2].strip()} {line_parts[-1].strip()}")
 
 
 	# Print ALERT! If users failed to use the sudo command; include the command.
 	def sudofail():
 		print()
 		
-		failedRoot = subprocess.check_output("cat /var/log/auth.log | grep -a 'sudo' | grep 'fail'", shell=True).decode("utf-8").split('\n')
-		print("=> sudo execution fail: ")
-		print()
-		for fpr in failedRoot:
-			print(fpr)
+		# Open the auth.log file and read its content
+		with open('/var/log/auth.log', 'r') as auth_log:
+			log_lines = auth_log.readlines()
+		
+		# Filter lines containing 'sudo' and 'fail'
+		failed_sudo_lines = [line for line in log_lines if 'sudo' in line and 'fail' in line]
+		
+		if failed_sudo_lines:
+			print("=> ALERT! sudo execution failed: ")
+			print()
+			for line in failed_sudo_lines:
+				print(line.strip())
+		else:
+			print("=> No sudo execution failures found.")
 
 
 	# Print details of when users used the su command.
 	def sucommanduse():
 		print()
 		
-		usedsu = subprocess.check_output("cat /var/log/auth.log | grep -a 'su:'", shell=True).decode("utf-8").split('\n')
+		# Open the auth.log file and read its content
+		with open('/var/log/auth.log', 'r') as auth_log:
+			log_lines = auth_log.readlines()
+		
+		# Filter lines containing 'su:'
+		su_lines = [line for line in log_lines if 'su:' in line]
+		
 		print("=> There was the use of su command: ")
 		print()
-		for period in usedsu:
-			if period != "":
-				print(f"The user used su command on: {period[:16]}")
+		for line in su_lines:
+			timestamp = line.split()[0] + ' ' + line.split()[1] + ' ' + line.split()[2]
+			print(f"The user used su command on: {timestamp}")
 
 
 
